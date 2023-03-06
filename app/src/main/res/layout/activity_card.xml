@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.CardActivity"
+    android:background="@color/dirty_white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_card_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/Theme.MyTodoList.AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_card_activity"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/primary_accent"
+            app:popupTheme="@style/Theme.MyTodoList.PopupOverlay"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_card_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_card_activity"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:elevation="5dp"
+        app:cardCornerRadius="@dimen/card_corner_radius">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_vertical_margin_small"
+            app:hintTextColor="@color/text_color">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_name_card_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/card_name"
+                android:textColorHint="@color/text_color"
+                android:inputType="text"
+                android:background="@color/white"
+                android:textSize="@dimen/paragraph_1"
+                tools:text="Test"
+                android:textColor="@color/text_color"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/cv_card_name"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:padding="@dimen/activity_vertical_margin_small"
+        android:elevation="5dp"
+        app:cardCornerRadius="@dimen/card_corner_radius">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_vertical_margin_small">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_color">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_color_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/select_color"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/paragraph_1"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="Members">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_select_members"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/select_members">
+            </TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_members"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:orientation="horizontal"/>
+
+            <TextView
+                android:id="@+id/tv_do_date_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/due_date">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_do_date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/select_date"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/paragraph_1"/>
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_update_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_dividing_margin"
+                android:gravity="center"
+                android:background="@drawable/button_gradinet_rounded"
+                android:text="@string/update_card"
+                android:textColor="@color/white"
+                android:textSize="@dimen/paragraph_1"
+                android:fontFamily="@font/tiltneonregular" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
