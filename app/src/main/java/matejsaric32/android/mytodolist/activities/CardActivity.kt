@@ -38,11 +38,14 @@ class CardActivity : BaseActivity() {
     private var mTaskPosition: Int? = null
     private var mSelectedColor: String? = ""
     private lateinit var mMembersAssignedList: ArrayList<User>
+    private lateinit var mMembersAssignedBoardList: ArrayList<User>
 
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
     private var calendar = Calendar.getInstance()
     private var mSelectedDueDate: String? = null
 
+    private var mSelectedMembersList: ArrayList<SelectedMembers> = ArrayList()
+    private var mSelectedMembersBoardList: ArrayList<SelectedMembers> = ArrayList()
 
     private var mAdapter: CardMembersAdapter? = null
 
@@ -51,9 +54,7 @@ class CardActivity : BaseActivity() {
         binding = ActivityCardBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-
         getDataForomIntent()
-
 
         setUpActionBar()
 
@@ -70,10 +71,6 @@ class CardActivity : BaseActivity() {
         mSelectedColor = mBoardDetails?.taskList?.get(mTaskPosition!!)?.cards?.get(mCardPosition!!)?.colorLabel
         if (mSelectedColor!!.isNotEmpty()) {
             setColor()
-        }
-
-        binding?.tvSelectMembers?.setOnClickListener{
-            membersListDialog()
         }
 
         dateSetListener = DatePickerDialog.OnDateSetListener {
@@ -104,32 +101,29 @@ class CardActivity : BaseActivity() {
         binding?.tvDoDatePicker?.setText(sdf.format(calendar.time).toString())
     }
 
+    /**
+     * Setting up recycler view for member assigned to
+     */
+
     private fun setupSelectedMembersList(){
         val cardAssignedMembersList = mBoardDetails?.taskList?.
         get(mTaskPosition!!)?.cards?.get(mCardPosition!!)?.assignedTo
 
-        val selectedMembersList: ArrayList<SelectedMembers> = ArrayList()
+        Log.d("CardActivity", "Card assigned members: ${mMembersAssignedList.toString()}")
 
-        if (cardAssignedMembersList!!.size > 0) {
-            for (i in mMembersAssignedList.indices) {
-                for (j in cardAssignedMembersList) {
-                    if (mMembersAssignedList[i].id == j) {
-                        val selectedMember = SelectedMembers(
-                            mMembersAssignedList[i].id,
-                            mMembersAssignedList[i].image,
-                            mMembersAssignedList[i].name
-                        )
-                        selectedMembersList.add(selectedMember)
-                    }
+        for (element in cardAssignedMembersList!!) {
+            for (user in mMembersAssignedList) {
+                if (element == user.id) {
+                    val selectedMember = SelectedMembers(user.id, user.image, user.name, true)
+                    mSelectedMembersList.add(selectedMember)
+                    mSelectedMembersBoardList.add(selectedMember)
+                }else{
+                    mSelectedMembersBoardList.add(SelectedMembers(user.id, user.image, user.name, false))
                 }
-            }
-        } else {
-            for (i in mMembersAssignedList.indices) {
-                mMembersAssignedList[i].selected = false
             }
         }
 
-        if (selectedMembersList.size > 0) {
+        if (mSelectedMembersList.size > 0) {
 //            selectedMembersList.add(SelectedMembers("", ""))
 
             binding?.rvMembers?.visibility = View.VISIBLE
@@ -137,63 +131,46 @@ class CardActivity : BaseActivity() {
             binding?.rvMembers?.layoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-            val mAdapter = CardMembersAdapter(this, selectedMembersList, true)
+            mAdapter = CardMembersAdapter(this, mSelectedMembersList)
             binding?.rvMembers?.adapter = mAdapter
 
-            mAdapter.setOnClickListener(object : CardMembersAdapter.OnClickListener{
+            mAdapter!!.setOnClickListener(object : CardMembersAdapter.OnClickListener{
                 override fun onClick() {
-                    membersListDialog()
+                    Toast.makeText(this@CardActivity, "Clicked", Toast.LENGTH_SHORT).show()
+//                    membersListDialog()
                 }
             })
 
         } else {
-            binding?.tvSelectMembers?.visibility = View.VISIBLE
             binding?.rvMembers?.visibility = View.GONE
         }
     }
 
-    private fun membersListDialog(){
-        val cardAssignedMembersList = mBoardDetails?.taskList?.
-        get(mTaskPosition!!)?.cards?.get(mCardPosition!!)?.assignedTo
 
-        if (cardAssignedMembersList!!.size > 0) {
-            for (i in mMembersAssignedList.indices) {
-                for (j in cardAssignedMembersList) {
-                    if (mMembersAssignedList[i].id == j) {
-                        mMembersAssignedList[i].selected = true
-                    }
-                }
-            }
-        } else {
-            for (i in mMembersAssignedList.indices) {
-                mMembersAssignedList[i].selected = false
-            }
-        }
-
+    fun membersListDialog(){
         val listDialog = object : MemberListDialog(
             this,
-            mMembersAssignedList
+            mSelectedMembersBoardList
         ){
-            override fun onItemSelected(user: User, action: String) {
+            override fun onItemSelected(user: SelectedMembers, action: String) {
                 if (action == Constants.SELECT) {
-                    if (!mBoardDetails!!.taskList[mTaskPosition!!].cards[mCardPosition!!].assignedTo.contains(user.id)) {
-                        mBoardDetails!!.taskList[mTaskPosition!!]
-                            .cards[mCardPosition!!].assignedTo.add(user.id!!)
-                        Toast.makeText(this@CardActivity, "Selected user: ${ mBoardDetails!!.taskList[mTaskPosition!!]
-                            .cards[mCardPosition!!].assignedTo.size}", Toast.LENGTH_SHORT).show()
-                        showProgressDialog(resources.getString(R.string.please_wait))
-                        FirestoreClass().addUpdateTaskList(this@CardActivity, mBoardDetails!!)
-                        setupSelectedMembersList()
+                    if (!mSelectedMembersList.contains(user)) {
+                        user.isSelected = true
+                        mSelectedMembersList.add(user)
+                        mAdapter?.notifyDataSetChanged()
+                        Toast.makeText(this@CardActivity, "Selected user: ${user.name}  ${mSelectedMembersList.size}", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    mBoardDetails!!.taskList[mTaskPosition!!].cards[mCardPosition!!].assignedTo.remove(user.id!!)
-                    Toast.makeText(this@CardActivity, "Selected user: ${ mBoardDetails!!.taskList[mTaskPosition!!]
-                        .cards[mCardPosition!!].assignedTo.size}", Toast.LENGTH_SHORT).show()
+                    user.isSelected = false
+                    mSelectedMembersList.remove(user)
+                    mAdapter?.notifyDataSetChanged()
                 }
             }
         }
+
         listDialog.show()
     }
+
 
     private fun colorListDialog(){
         val colorsList: ArrayList<String> = colorsList()
@@ -233,9 +210,9 @@ class CardActivity : BaseActivity() {
         val card = Card(
             binding?.etNameCardDetails?.text.toString(),
             mBoardDetails?.taskList!![mTaskPosition!!].cards[mCardPosition!!].createdBy,
-            mBoardDetails?.taskList!![mTaskPosition!!].cards[mCardPosition!!].assignedTo,
+            mSelectedMembersList!!.map { it.id } as ArrayList<String>,
             mSelectedDueDate!!,
-            mSelectedColor!!
+            mSelectedColor!!,
         )
 
         mBoardDetails!!.taskList[mTaskPosition!!].cards[mCardPosition!!] = card
@@ -244,6 +221,7 @@ class CardActivity : BaseActivity() {
     }
 
     fun updatedeleteCardSuccess() {
+        setResult(Activity.RESULT_OK, Intent().putExtra(Constants.BOARD_ID, mBoardDetails))
         hideProgressDialog()
         finish()
     }
@@ -283,6 +261,9 @@ class CardActivity : BaseActivity() {
         when (item.itemId) {
             R.id.action_delete_card -> {
                 alertDialogForDeleteList(mBoardDetails!!.taskList[mTaskPosition!!].cards[mCardPosition!!].name!!)
+            }
+            R.id.action_add_member_to_card -> {
+                membersListDialog()
             }
         }
         return super.onOptionsItemSelected(item)

@@ -5,6 +5,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
@@ -13,9 +14,12 @@ import matejsaric32.android.mytodolist.R
 import matejsaric32.android.mytodolist.databinding.ActivityBaseBinding
 import matejsaric32.android.mytodolist.databinding.DialogProgressBinding
 
-open class BaseActivity : AppCompatActivity() {
+/**
+ * Base activity is activity that has few functions that all function that inherit base function
+ * can use as propreties
+ */
 
-    private var doubleBackToExitPressedOnce = false
+open class BaseActivity : AppCompatActivity() {
 
     var bindingBase: ActivityBaseBinding? = null
 
@@ -23,11 +27,14 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         bindingBase = ActivityBaseBinding.inflate(layoutInflater)
-
         setContentView(bindingBase?.root)
     }
+
+    /**
+     * Function to show progress dialog
+     * @param text - text to bew diplayed
+     */
 
     fun showProgressDialog(text: String) {
         mProgressDialog = Dialog(this)
@@ -37,30 +44,30 @@ open class BaseActivity : AppCompatActivity() {
         mProgressDialog.show()
     }
 
+    /**
+     * Function to dismiss progress dialog
+     */
+
     fun hideProgressDialog() {
         mProgressDialog.dismiss()
     }
+
+    /**
+     * Function that returns current user id
+     * @return - current users id
+     * @see CreateBoardActivity.createBoard
+     */
 
     fun getCurrentUserID(): String {
         return FirebaseAuth.getInstance().currentUser!!.uid
     }
 
-    fun doubleBackToExit() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed()
-            return
-        }
 
-        this.doubleBackToExitPressedOnce = true
-        Toast.makeText(
-            this,
-            "Please click BACK again to exit",
-            Toast.LENGTH_SHORT
-        ).show()
+    /**
+     * Function has main task to create a error snack bar
+     * @param message - message that will be displayed in snack-bar
+     */
 
-        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
-
-    }
 
     fun showErrorSnackBar(message: String) {
         val snackBar =

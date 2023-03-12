@@ -8,6 +8,7 @@ data class SelectedMembers(
     val id: String? = "",
     val image: String? = null,
     val name: String? = null,
+    var isSelected: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),

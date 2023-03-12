@@ -37,11 +37,11 @@ class MembersCardList(
                 .placeholder(R.drawable.ic_baseline_account_circle_24)
                 .into(holder.sivProfile!!)
 
-            if (model.selected) {
-                holder.ivSelected?.visibility = View.VISIBLE
-            }else{
-                holder.ivSelected?.visibility = View.INVISIBLE
-            }
+//            if (model.selected) {
+//                holder.ivSelected?.visibility = View.VISIBLE
+//            }else{
+//                holder.ivSelected?.visibility = View.INVISIBLE
+//            }
 
             holder.itemView.setOnClickListener{
                 if (onClickListener != null) {
@@ -61,7 +61,6 @@ class MembersCardList(
         val tvName = bind?.tvMemberName
         val tvEmail = bind?.tvMemberEmail
         val sivProfile = bind?.sivMemberProfile
-        val ivSelected = bind?.ivMemberSelected
     }
 
     interface OnClickListener {

@@ -16,8 +16,8 @@
         <View
             android:id="@+id/view_label_color"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:layout_height="8dp"
+            android:visibility="visible"
             tools:background="@color/primary_accent" />
 
         <TextView

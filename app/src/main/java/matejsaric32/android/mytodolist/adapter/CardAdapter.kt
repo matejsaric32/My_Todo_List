@@ -30,6 +30,11 @@ class CardAdapter(
         if (holder is ViewHolder) {
 
             holder.tvTitle?.text = model.name
+            if (model.colorLabel!!.isNotEmpty()){
+                holder.vCollorLabel!!.setBackgroundColor(Color.parseColor(model.colorLabel))
+            }else{
+                holder.vCollorLabel!!.visibility = View.GONE
+            }
 
             holder.itemView.setOnClickListener {
                 if(onClickListener != null) {
@@ -54,6 +59,7 @@ class CardAdapter(
     class ViewHolder(bind: ItemCardBinding) : RecyclerView.ViewHolder(bind.root) {
         val tvTitle = bind?.tvCardName
         val rvMembers = bind?.rvCardSelectedMembersList
+        val vCollorLabel = bind?.viewLabelColor
     }
 
 }

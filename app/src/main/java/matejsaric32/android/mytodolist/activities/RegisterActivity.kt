@@ -1,5 +1,6 @@
 package matejsaric32.android.mytodolist.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -15,6 +16,12 @@ import matejsaric32.android.mytodolist.firebase.FirestoreClass
 import matejsaric32.android.mytodolist.models.User
 import matejsaric32.android.mytodolist.utils.Constants
 
+/**
+ * RegisterActivity is class that controls activity_register.xml
+ * Main task of this activity is to register a new user
+ * Function inherits BaseActivity
+ */
+
 
 class RegisterActivity : BaseActivity() {
 
@@ -26,6 +33,24 @@ class RegisterActivity : BaseActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
+        firebaseAuth = FirebaseAuth.getInstance() /** Getting a instance of Firebase Authentication  */
+        setupActionBar() /** Setting up action bar */
+
+        /**
+         * Listener when button is clicked calls register function.
+         */
+
+        binding?.btnSignUp?.setOnClickListener {
+            registerUser()
+        }
+
+    }
+
+    /**
+     * A function for actionBar Setup.
+     */
+
+    private fun setupActionBar() {
         setSupportActionBar(binding?.toolbarSignUpActivity)
 
         if (supportActionBar != null) {
@@ -34,16 +59,13 @@ class RegisterActivity : BaseActivity() {
         }
 
         binding?.toolbarSignUpActivity?.setNavigationOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
-
-        firebaseAuth = FirebaseAuth.getInstance()
-
-        binding?.btnSignUp?.setOnClickListener {
-            registerUser()
-        }
-
     }
+
+    /**
+     * Function is called when user registration was successful
+     */
 
     fun userRegisteredSuccess() {
         Toast.makeText(
@@ -51,15 +73,19 @@ class RegisterActivity : BaseActivity() {
             "You have successfully registered.",
             Toast.LENGTH_SHORT
         ).show()
-        FirebaseAuth.getInstance().signOut()
+        val intent = Intent(this@RegisterActivity, MainActivity::class.java)
+        startActivity(intent)
         finish()
     }
 
-    private fun registerUser() {
-        val name: String = binding?.etName?.text.toString().trim { it <= ' ' }
-        val email: String = binding?.etEmail?.text.toString().trim { it <= ' ' }
-        val password: String = binding?.etPassword?.text.toString().trim { it <= ' ' }
+    /**
+     * Function to register new user
+     */
 
+    private fun registerUser() {
+        val name: String = binding?.etName?.text.toString().trim()
+        val email: String = binding?.etEmail?.text.toString().trim()
+        val password: String = binding?.etPassword?.text.toString().trim()
 
         if (validateForm(name, email, password)) {
             showProgressDialog(resources.getString(R.string.please_wait))
@@ -69,29 +95,27 @@ class RegisterActivity : BaseActivity() {
                         hideProgressDialog()
                         if (task.isSuccessful) {
 
-                            Log.e("getCurrentUserID", FirebaseAuth.getInstance().currentUser!!.uid)
+                            Log.i("userRegistration", "User registration was successful; user_id :  " +
+                                    "${FirebaseAuth.getInstance().currentUser!!.uid}")
 
-                            val firebaseUser: FirebaseUser = task.result!!.user!!
+                            val firebaseUser : FirebaseUser = task.result!!.user!!
                             val registeredEmail = firebaseUser.email!!
 
-                            val user = User(
-                                firebaseUser.uid, name, registeredEmail
-                            )
-
+                            val user = User(firebaseUser.uid, name, registeredEmail)
                             FirestoreClass().registerUser(this@RegisterActivity, user)
 
                         } else {
-                            Toast.makeText(
-                                this@RegisterActivity,
-                                task.exception!!.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Log.e("UserLogin", "User logged was unsuccessfully")
+                            Toast.makeText(this@RegisterActivity, "Unable to register!!!", Toast.LENGTH_SHORT).show()
                         }
-                    })
-
+                    }
+                )
         }
     }
 
+    /**
+     * Function to validate form
+     */
 
     private fun validateForm(name: String, email: String, password: String): Boolean {
         return when {

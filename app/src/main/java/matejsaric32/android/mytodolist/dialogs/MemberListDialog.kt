@@ -7,16 +7,19 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import matejsaric32.android.mytodolist.adapter.ColorListAdapter
 import matejsaric32.android.mytodolist.adapter.MemberAdapter
+import matejsaric32.android.mytodolist.adapter.MembersCardList
+import matejsaric32.android.mytodolist.adapter.MembersDialogListAdapter
 import matejsaric32.android.mytodolist.databinding.DialogListBinding
+import matejsaric32.android.mytodolist.models.SelectedMembers
 import matejsaric32.android.mytodolist.models.User
 import matejsaric32.android.mytodolist.utils.Constants
 
 abstract class MemberListDialog(
     context: Context,
-    private var list: ArrayList<User>,
+    private var list: ArrayList<SelectedMembers>,
 ) : Dialog(context){
 
-        private var mAdapter: MemberAdapter? = null
+
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -30,18 +33,22 @@ abstract class MemberListDialog(
     private fun setUpRecyclerView(binding: DialogListBinding){
         binding.tvTitle.text = "Select member"
         binding.rvList.layoutManager = LinearLayoutManager(context)
-        mAdapter = MemberAdapter(context, list)
+        var mAdapter = MembersDialogListAdapter(context, list)
         binding.rvList.adapter = mAdapter
-        mAdapter?.setOnClickListener(object : MemberAdapter.OnClickListener{
-            override fun onClick(position: Int, model: User, action: String) {
+        mAdapter?.setOnClickListener(object : MembersDialogListAdapter.OnClickListener{
+            override fun onClick(position: Int, model: SelectedMembers, action: String) {
                 dismiss()
-                onItemSelected(model, Constants.SELECT)
-//                Toast.makeText(context, "You clicked on ${model.name}", Toast.LENGTH_SHORT).show()
+                if (model.isSelected == false){
+                    onItemSelected(model, Constants.SELECT)
+                    Toast.makeText(context, "You clicked on ${model.name}", Toast.LENGTH_SHORT).show()
+                }else{
+                    onItemSelected(model, Constants.UN_SELECT)
+                    Toast.makeText(context, "You clicked on ${model.name}", Toast.LENGTH_SHORT).show()
+                }
             }
-
         })
     }
 
-    protected abstract fun onItemSelected(model: User, action: String)
+    protected abstract fun onItemSelected(model: SelectedMembers, action: String)
 
 }

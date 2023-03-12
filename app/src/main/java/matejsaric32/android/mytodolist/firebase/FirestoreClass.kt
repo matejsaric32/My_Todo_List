@@ -58,7 +58,7 @@ class FirestoreClass {
 
                     when(activity){
                         is LogInActivity -> {
-                            activity.signInSuccess(loggedUser!!)
+                            activity.signInSuccess()
                         }
                         is MainActivity -> {
                             Log.e("LoginDataMain", "DocumentSnapshot data: ${document.data}")
@@ -85,12 +85,9 @@ class FirestoreClass {
             .document(getCurrentUserID())
             .update(userHashMap)
             .addOnSuccessListener {
-                Log.e("UpdateUserData", "User profile data updated successfully.")
+                Log.i("UpdateUserData", "User profile data updated successfully.")
 
                 when(activity){
-//                    is MainActivity -> {
-//                        activity.tokenUpdateSuccess()
-//                    }
                     is ProfileActivity -> {
                         activity.updateSuccess()
                     }
@@ -98,14 +95,11 @@ class FirestoreClass {
             }
             .addOnFailureListener { e ->
                 when(activity){
-                    is MainActivity -> {
-                        activity.hideProgressDialog()
-                    }
                     is ProfileActivity -> {
-                        activity.hideProgressDialog()
+                        activity.updateFailure()
                     }
                 }
-                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+                Log.e("UpdateUserData", "Error while creating a board.", e)
             }
     }
 
@@ -114,12 +108,12 @@ class FirestoreClass {
             .document()
             .set(boardInfo, SetOptions.merge())
             .addOnSuccessListener {
-                Log.e(activity.javaClass.simpleName, "Board created successfully.")
+                Log.e("CreateBoard", "Board created successfully.")
                 activity.boardCreatedSuccessfully()
             }
             .addOnFailureListener { e ->
-                activity.hideProgressDialog()
-                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+                activity.boardCreatedUnsuccessfully()
+                Log.e("CreateBoard", "Error while creating a board.", e)
             }
     }
 
@@ -177,24 +171,50 @@ class FirestoreClass {
         val taskListHashMap = HashMap<String, Any>()
         taskListHashMap[Constants.TASK_LIST] = boardInfo.taskList
 
+        if (activity is UpdateBoardActivity){
+            taskListHashMap.put(Constants.IMAGE, boardInfo.image!!)
+            taskListHashMap.put(Constants.NAME, boardInfo.name!!)
+        }
+
         fireStore.collection(Constants.BOARDS)
             .document(boardInfo.boardId!!)
             .update(taskListHashMap)
             .addOnSuccessListener {
-                Log.e("TaskListUpdate", "TaskList updated successfully.")
+                Log.i("TaskListUpdate", "TaskList updated successfully.")
 
                 when(activity){
                     is TaskListActivity -> {
+                        Log.i("TaskListUpdate - TaskListActivity", "TaskListActivity")
                         activity.addUpdateTaskListSuccess()
                     }
                     is CardActivity -> {
                         activity.updatedeleteCardSuccess()
+                        Log.i("TaskListUpdate - CardActivity", "CardActivity")
+                    }
+                    is UpdateBoardActivity -> {
+                        activity.updateBoardSuccess()
+                        Log.i("UpdateBoardActivity", "UpdateBoardActivity")
                     }
                 }
             }
             .addOnFailureListener { e ->
-                activity.hideProgressDialog()
-                Log.e("TaskListUpdate", "Error while creating a board.", e)
+                when (activity) {
+                    is TaskListActivity -> {
+                        activity.hideProgressDialog()
+                        Log.i("TaskListUpdate - TaskListActivity", "Failed to update update board")
+                        activity.addUpdateTaskListSuccess()
+                    }
+                    is CardActivity -> {
+                        activity.hideProgressDialog()
+                        activity.updatedeleteCardSuccess()
+                        Log.i("TaskListUpdate - CardActivity", "Failed to update update board")
+                    }
+                    is UpdateBoardActivity -> {
+                        activity.updateBoardFailure()
+                        Log.e("UpdateBoardActivity", "Failed to update update board")
+                    }
+                }
+
             }
     }
 
@@ -221,7 +241,7 @@ class FirestoreClass {
             .addOnFailureListener { e ->
                 when(activity){
                     is MembersActivity -> {
-                        activity.hideProgressDialog()
+                        activity.failureMembersList()
                     }
                     is TaskListActivity -> {
                         activity.hideProgressDialog()
@@ -262,9 +282,23 @@ class FirestoreClass {
                 activity.memberAdded(user)
             }
             .addOnFailureListener { e ->
-                activity.hideProgressDialog()
+                activity.memberAddedFaliure()
                 Log.e("assignMember", "Error while updating users in a board.", e)
             }
+    }
+
+    fun deleteBoard(activity: Activity, boardInfo: Board){
+        fireStore.collection(Constants.BOARDS)
+            .document(boardInfo.boardId!!)
+            .delete()
+            .addOnSuccessListener {
+                when(activity){
+                    is TaskListActivity -> {
+                        activity.deleteBoardSucces()
+                    }
+                }
+            }
+
     }
 
 

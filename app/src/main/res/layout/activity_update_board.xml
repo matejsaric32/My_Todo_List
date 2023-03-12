@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.UpdateBoardActivity"
+    android:background="@color/dirty_white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_update_board_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/Theme.MyTodoList.AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_update_board_activity"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/primary_accent"
+            app:popupTheme="@style/Theme.MyTodoList.PopupOverlay"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_create_board"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_update_board_activity"
+        android:layout_marginTop="@dimen/vertical_dividing_margin"
+        android:layout_marginStart="@dimen/activity_global_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_global_horizontal_margin"
+        android:padding="@dimen/card_inner_padding"
+        android:orientation="vertical"
+        android:background="@drawable/card_white_border_radius">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/siv_board_image_update_board"
+            android:layout_width="@dimen/profile_size_profile_activity"
+            android:layout_height="100dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/vertical_dividing_margin"
+            app:srcCompat="@drawable/ic_baseline_account_circle_24"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ti_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextColor="@color/text_color"
+            android:layout_marginTop="@dimen/vertical_dividing_margin"
+            app:layout_constraintTop_toBottomOf="@id/siv_board_image_update_board">
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_board_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/board_name"
+                android:inputType="text"
+                android:textSize="@dimen/paragraph_1"
+                android:background="@color/white"
+                android:text=""/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_update_board"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_dividing_margin"
+            app:layout_constraintTop_toBottomOf="@+id/ti_name"
+            android:background="@drawable/button_gradinet_rounded"
+            android:text="@string/update_board"
+            android:textSize="@dimen/paragraph_1"
+            android:textColor="@color/white"
+            android:fontFamily="@font/tiltneonregular" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

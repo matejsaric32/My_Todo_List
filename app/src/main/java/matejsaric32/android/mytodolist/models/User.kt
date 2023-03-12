@@ -9,8 +9,7 @@ data class User(
     val email: String? = "",
     val image: String? = "",
     val mobile: Long = 0,
-    val fcmToken: String? = "",
-    var selected: Boolean = false
+    val fcmToken: String? = ""
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),

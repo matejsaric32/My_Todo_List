@@ -1,5 +1,6 @@
 package matejsaric32.android.mytodolist.adapter
 
+import android.content.ClipData.Item
 import android.content.Context
 import android.content.res.Resources
 import android.text.Editable
@@ -31,16 +32,14 @@ class TaskAdapter(private val context: Context, private var list: ArrayList<Task
             parent,
             false)
 
-        //this is for adjusting width of the linear layout, we want it to cover 70% of the screen
         val layoutParams = LinearLayout.LayoutParams(
-            (parent.width * 0.7).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT) //width,height
+            (parent.width * 0.7).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT)
 
         layoutParams.setMargins((15.toDp().toPx()),
             (15.toDp().toPx()),
             (100.toDp().toPx()),
             (15.toDp().toPx()))
 
-//        layoutParams.setMargins((15.toDp().toPx()),0,(40.toDp().toPx()),0)
         viewBinding.root.layoutParams=layoutParams
 
         return ViewHolder(viewBinding)
@@ -122,6 +121,23 @@ class TaskAdapter(private val context: Context, private var list: ArrayList<Task
              * Listener for adding card and showing it and CRUD operations
              */
 
+            if(model.cards.size > 0){
+                holder.rvTaskList.layoutManager = LinearLayoutManager(context)
+                holder.rvTaskList.setHasFixedSize(true)
+
+                val adapter = CardAdapter(context, model.cards)
+                holder.rvTaskList.adapter = adapter
+
+                adapter.setOnClickListener(object: CardAdapter.OnClickListener{
+                    override fun onClick(positionCard: Int, model: Card) {
+                        if (context is TaskListActivity){
+                            context.cardDetails(holder.adapterPosition, positionCard)
+                        }
+                    }
+                })
+            }
+
+
             holder.llAddCard.setOnClickListener {
                 holder.llAddCard.visibility = View.GONE
                 holder.cvAddCard.visibility = View.VISIBLE
@@ -159,8 +175,6 @@ class TaskAdapter(private val context: Context, private var list: ArrayList<Task
                         }
                     }
                 })
-
-
             }
 
             holder.btnCloseCardAdd.setOnClickListener {

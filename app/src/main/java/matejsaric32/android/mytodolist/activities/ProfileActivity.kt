@@ -1,14 +1,10 @@
 package matejsaric32.android.mytodolist.activities
 
 import android.Manifest
-import android.Manifest.permission.CAMERA
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -19,23 +15,22 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.google.android.gms.common.data.BitmapTeleporter
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import matejsaric32.android.mytodolist.R
 import matejsaric32.android.mytodolist.databinding.ActivityProfileBinding
 import matejsaric32.android.mytodolist.firebase.FirestoreClass
 import matejsaric32.android.mytodolist.models.User
 import matejsaric32.android.mytodolist.utils.Constants
-import matejsaric32.android.mytodolist.utils.Constants.IMAGE_DIRECTORY
-import java.io.*
 import java.util.*
+
+/**
+ * ProfileActivity is class that controls activity_profile
+ * Main task of this activity is for user to edit his profile
+ * change his profile activity username and phone number
+ * Inherits properties form BaseActivity
+ */
 
 class ProfileActivity : BaseActivity() {
 
@@ -50,12 +45,16 @@ class ProfileActivity : BaseActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        setupActionBar()
+        setupActionBar() /** Setting up action bar */
+        FirestoreClass().getUserData(this) /** Gets user data from FirestoreClass*/
 
-        FirestoreClass().getUserData(this)
-
+        /**
+         * Listener when user profile picture is clicked to show dialog for user to choose
+         * where he wants to provide the picture from gallery or camera
+         */
 
         binding?.sivPlaceImageProfile?.setOnClickListener {
+
             val pictureDialog = AlertDialog.Builder(this)
             pictureDialog.setTitle("Select Action")
             val pictureDialogItems = arrayOf("Select photo from gallery",
@@ -70,15 +69,43 @@ class ProfileActivity : BaseActivity() {
             pictureDialog.show()
         }
 
+        /**
+         * Listener when button is clicked calls a function to update the user info
+         */
+
         binding?.btnUpdate?.setOnClickListener {
+            Toast.makeText(this, "Update", Toast.LENGTH_SHORT).show()
             if (mSelectedImageFileUri != null) {
+                showProgressDialog(resources.getString(R.string.please_wait))
                 uploadUserProfileImage()
+                updateUserProfileData()
             } else {
                 showProgressDialog(resources.getString(R.string.please_wait))
                 updateUserProfileData()
             }
         }
     }
+
+    /**
+     * Camera contract to start Camera activity and if data is received changes displayed profile picture
+     *  @see takePhotoFromCamera
+     *  @see CameraActivity
+     */
+
+    var cameraContract = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this, "Image captured", Toast.LENGTH_LONG).show()
+            mSelectedImageFileUri = Uri.parse(result.data?.getStringExtra("image"))
+            Log.e("URI", mSelectedImageFileUri.toString())
+            binding?.sivPlaceImageProfile?.setImageURI(mSelectedImageFileUri)
+        }
+    }
+
+    /**
+     * Function validates form inputs and calls Firestorefunction to update the user
+     * @see onCreate
+     * @see FirestoreClass.updateUserData
+     */
 
     private fun updateUserProfileData(){
         val userHashMap = HashMap<String, Any>()
@@ -103,11 +130,32 @@ class ProfileActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Function that is called when updating user was successful
+     * @see FirestoreClass.updateUserData
+     */
+
+    fun updateFailure(){
+        hideProgressDialog()
+        showErrorSnackBar("There was a problem updating user profile")
+    }
+
+    /**
+     * Function that is called when updating user was successful
+     * @see FirestoreClass.updateUserData
+     */
+
     fun updateSuccess() {
         hideProgressDialog()
         setResult(Activity.RESULT_OK)
         finish()
     }
+
+    /**
+     * A function to upload image to Google storage
+     * @see cameraContract
+     * @see galleryContract
+     */
 
     private fun uploadUserProfileImage() {
         showProgressDialog(resources.getString(R.string.please_wait))
@@ -135,9 +183,20 @@ class ProfileActivity : BaseActivity() {
         hideProgressDialog()
     }
 
+    /**
+     * Function to get URI's file extension
+     * @param uri: Uri - uri from file that user has selected to be a new profile of this bord
+     * @see uploadBoardImage
+     */
+
     private fun getFileExtension(uri: Uri): String? {
         return MimeTypeMap.getSingleton().getExtensionFromMimeType(contentResolver.getType(uri))
     }
+
+    /**
+     * Function to check privileges and start camera
+     * @see onCreate
+     */
 
     private fun takePhotoFromCamera() {
 
@@ -145,74 +204,31 @@ class ProfileActivity : BaseActivity() {
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.STORAGE_PERMISSION_CODE)
 
         if (isPermissionGrantedForCamera()) {
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(intent, Constants.CAMERA_PERMISSION_CODE)
+            val intent = Intent(this, CameraActivity::class.java)
+            cameraContract.launch(intent)
         } else {
             Toast.makeText(this, "Permission denied2222", Toast.LENGTH_SHORT).show()
         }
 
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == Constants.CAMERA_PERMISSION_CODE) {
-                val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
-                lifecycleScope.launch {
-                    mSelectedImageFileUri = saveImage(thumbnail)
-                    binding?.sivPlaceImageProfile?.setImageURI(mSelectedImageFileUri)
-                }
-
-//               saveImage(thumbnail)
-                Log.e("Saved Image : ", "Path :: ${mSelectedImageFileUri.toString()}")
-                Toast.makeText(this@ProfileActivity, "Image Saved!", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private suspend fun saveImage(bitmap: Bitmap) : Uri{
-        var result : Uri? = null
-        withContext(Dispatchers.IO){
-            if (bitmap != null){
-                try {
-                    val bytes = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
-                    Log.i("Image", "Image saved to gallery.")
-                    val f = File(externalCacheDir?.absoluteFile.toString() + File.separator
-                            + "DrawingApp_" + System.currentTimeMillis() / 1000 + ".png")
-
-                    f.createNewFile()
-
-                    val fo = FileOutputStream(f)
-                    fo.write(bytes.toByteArray())
-                    fo.close()
-                    result = f.toUri()
-
-                    runOnUiThread{
-                        if (result.toString().isNotEmpty()){
-                            Toast.makeText(this@ProfileActivity,
-                                "Image saved to gallery.",
-                                Toast.LENGTH_SHORT).show()
-                        }else{
-                            Toast.makeText(this@ProfileActivity,
-                                "Something went wrong.",
-                                Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                }catch (e: Exception){
-
-                    e.printStackTrace()
-                }
-            }
-        }
-        return result!!
-    }
+    /**
+     * Camera contract to start Camera activity
+     *  @see takePhotoFromCamera
+     *  @see CameraActivity
+     */
 
     private fun isPermissionGrantedForCamera(): Boolean {
         return (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     }
+
+    /**
+     * Function that checks if permission is granted if its not it requests it.
+     * @param permission - permission type
+     * @param requestCode - permission code to ensure the right permission
+     * @see takePhotoFromCamera
+     */
 
     private fun checkPermission(permission: String, requestCode: Int) {
         if (ContextCompat.checkSelfPermission(this@ProfileActivity, permission) == PackageManager.PERMISSION_DENIED) {
@@ -221,6 +237,14 @@ class ProfileActivity : BaseActivity() {
             Toast.makeText(this@ProfileActivity, "Permission already granted", Toast.LENGTH_SHORT).show()
         }
     }
+
+    /**
+     * Overridden function to request permission.
+     * @param requestCode
+     * @param premissions
+     * @param grantResults
+     * @see takePhotoFromCamera
+     */
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -239,19 +263,36 @@ class ProfileActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Function that launches contract for Gallery.
+     * @see onCreate
+     */
+
     private fun choosePhotoFromGallary() {
         val galleryIntent = Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        resultLauncher.launch(galleryIntent)
+        galleryContract.launch(galleryIntent)
     }
 
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    /**
+     * Gallery contract for picking image.
+     * @see choosePhotoFromGallary
+     */
+
+    private val galleryContract = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             mSelectedImageFileUri = result.data?.data
-            Log.e("Selected Image : ", "Path :: ${mSelectedImageFileUri.toString()}")
+            Log.e("SelectedImage:", "Path :: ${mSelectedImageFileUri.toString()}")
             binding?.sivPlaceImageProfile?.setImageURI(mSelectedImageFileUri)
+        }else{
+            Log.e("CancelledGalleryImagePicker", "Cancelled")
         }
     }
+
+    /**
+     * Filling user data form that is being updated
+     * @see FirestoreClass.getUserData
+     */
 
     fun setUserData(user: User){
 
@@ -274,6 +315,11 @@ class ProfileActivity : BaseActivity() {
         }
     }
 
+    /**
+     * A function for actionBar Setup.
+     * @see onCreate
+     */
+
     private fun setupActionBar() {
         setSupportActionBar(binding?.toolbarProfileActivity)
         if (supportActionBar != null) {
@@ -282,7 +328,7 @@ class ProfileActivity : BaseActivity() {
         }
 
         binding?.toolbarProfileActivity?.setNavigationOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 }

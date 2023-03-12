@@ -22,8 +22,10 @@ object Constants {
     const val CARD_LIST_POSITION: String = "task_list_position"
     const val TASK_LIST_POSITION: String = "card_list_position"
     const val BOARD_MEMBERS_LIST: String = "board_members_list"
-    const val SELECT:String = "Select"
-    const val UN_SELECT:String = "UnSelect"
+    const val SELECT: String = "Select"
+    const val UN_SELECT: String = "UnSelect"
+    const val HAS_BOARD_CHANGED: String = "change"
+
 
     const val BOARDS: String = "boards"
     const val ASSIGNED_TO: String = "assignedTo"

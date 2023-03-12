@@ -43,4 +43,6 @@
     <string name="update_card">Update Card</string>
     <string name="card_name">Card Name</string>
     <string name="select_members">Select members</string>
+    <string name="update_board">UPDATE BOARD</string>
+    <string name="members_assigned_to_card">Members assigned to card</string>
 </resources>

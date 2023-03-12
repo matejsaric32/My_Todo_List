@@ -28,6 +28,20 @@ import matejsaric32.android.mytodolist.models.Board
 import matejsaric32.android.mytodolist.models.User
 import matejsaric32.android.mytodolist.utils.Constants
 
+/**
+ * MainActivity is class that controls activity_main.xml that includes drawer layout navigation
+ * view that has nav_header_main in header layout and for menu activity_main_drawer. Content is placed
+ * in app_bar_main where fib to add new board is placed and tool bar and in other file called
+ * activity_main_content is where recycler view for boards is placed
+ *
+ *  Inherits properties form BaseActivity
+ *  @see NavigationView
+ *  @see https://developer.android.com/reference/com/google/android/material/navigation/NavigationView
+ *  @see https://developer.android.com/guide/navigation/navigation-getting-started
+ *  @see https://developer.android.com/reference/androidx/drawerlayout/widget/DrawerLayout
+ *  @see https://www.youtube.com/watch?v=_H0afgOSnYc
+ */
+
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var binding: ActivityMainBinding? = null
@@ -37,10 +51,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private var mUser: User? = null
 
-    companion object {
-        const val MY_PROFILE_REQUEST_CODE: Int = 55
-        const val CREATE_BOARD_REQUEST_CODE: Int = 66
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,19 +61,54 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         setContentView(binding?.root)
 
-        setupActionBar()
+        setupActionBar() /** Setting up action bar*/
 
-        binding?.navView?.setNavigationItemSelectedListener(this)
+        binding?.navView?.setNavigationItemSelectedListener(this) /** Listener for navigation */
 
-        FirestoreClass().getUserData(this, true)
+        FirestoreClass().getUserData(this, true) /** Getting user data */
+
+        /**
+         * Listener for floating button to call start contract for adding new board
+         */
 
         binding?.appBarMain?.fabAddNewTask?.setOnClickListener {
             val intent = Intent(this, CreateBoardActivity::class.java)
             intent.putExtra(Constants.USERS, mUser)
-            startActivityForResult(intent, CREATE_BOARD_REQUEST_CODE)
+            addNewBoardContract.launch(intent)
         }
 
     }
+
+    /**
+     * Contract for adding new board to activity and notifying if board has been added
+     * @see onCreate
+     * @see CreateBoardActivity
+     */
+
+    var addNewBoardContract = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            FirestoreClass().getBoardsList(this)
+        }
+    }
+
+    /**
+     * Contract for displaying board details or task list from board and notify if change has been made
+     * @see setUpBoardRecyclerView
+     * @see TaskListActivity
+     */
+
+    var boardDetailContract = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this, "Deleted Board", Toast.LENGTH_SHORT)
+            FirestoreClass().getBoardsList(this)
+        }
+    }
+
+    /**
+     * Function to setup recycler view and it's onclick listener
+     * @see BoardAdapter
+     * @see FirestoreClass.getBoardsList
+     */
 
     fun setUpBoardRecyclerView(boardList: ArrayList<Board>) {
         hideProgressDialog()
@@ -82,7 +127,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 override fun onClick(position: Int, model: Board) {
                     val intent = Intent(this@MainActivity, TaskListActivity::class.java)
                     intent.putExtra(Constants.BOARD_ID, model)
-                    startActivity(intent)
+                    boardDetailContract.launch(intent)
                 }
             })
 
@@ -92,26 +137,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK
-            && requestCode == MY_PROFILE_REQUEST_CODE
-        ) {
-            FirestoreClass().getUserData(this@MainActivity)
-        } else if (resultCode == Activity.RESULT_OK
-            && requestCode == CREATE_BOARD_REQUEST_CODE
-        ) {
-            FirestoreClass().getBoardsList(this@MainActivity)
-        } else {
-            Log.e("Cancelled", "Cancelled")
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        FirestoreClass().getUserData(this,false)
-    }
+    /**
+     * Function is called when we have data to setup drawer view/navigation
+     * @see FirestoreClass.getUserData
+     */
 
     fun updateNavigationUserDetails(user: User, readBoardsList: Boolean){
         Toast.makeText(this, "User: ${user.name}", Toast.LENGTH_SHORT).show()
@@ -149,8 +178,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             toggleDrawer()
         }
 
-
-
     }
 
     private fun toggleDrawer() {
@@ -164,8 +191,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onBackPressed() {
         if (binding?.drawerLayout?.isDrawerOpen(GravityCompat.START)!!) {
             binding?.drawerLayout?.closeDrawer(GravityCompat.START)
-        } else {
-            doubleBackToExit()
         }
     }
 
@@ -173,7 +198,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         when (item.itemId) {
             R.id.nav_profile -> {
                 val intent = Intent(this, ProfileActivity::class.java)
-                startActivityForResult(intent, MY_PROFILE_REQUEST_CODE)
+//                startActivityForResult(intent, MY_PROFILE_REQUEST_CODE)
+                resultLauncher.launch(intent)
+
 
             }
             R.id.nav_sign_out -> {
@@ -184,5 +211,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         binding?.drawerLayout?.closeDrawer(GravityCompat.START)
         return false
+    }
+
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            FirestoreClass().getUserData(this,false)
+        }
     }
 }

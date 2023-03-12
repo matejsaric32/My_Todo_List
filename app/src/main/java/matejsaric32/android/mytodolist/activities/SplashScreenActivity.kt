@@ -5,6 +5,7 @@ import android.content.Intent.getIntent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import matejsaric32.android.mytodolist.R
 import matejsaric32.android.mytodolist.databinding.ActivitySplashScreenBinding
 import matejsaric32.android.mytodolist.firebase.FirestoreClass
@@ -19,7 +20,12 @@ class SplashScreenActivity : BaseActivity() {
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        Handler().postDelayed({
+        /**
+         * Show splash screen for x amount of time then go to Intro activity if
+         * there is no user signed in if there is start MainActivity
+         */
+
+        Handler(Looper.getMainLooper()).postDelayed({
 
             var currentUser = FirestoreClass().getCurrentUserID()
 

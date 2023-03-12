@@ -6,12 +6,11 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:layout_width="400dp"
         android:layout_height="match_parent"
-        android:background="@drawable/card_white_border_radius"
+        android:background="@color/white"
         app:cardCornerRadius="@dimen/card_corner_radius"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true">
+        app:cardElevation="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,12 +30,6 @@
                 android:visibility="visible"
                 tools:text="Select" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.4dp"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:background="@color/text_color" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvList"
