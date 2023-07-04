@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainActivity"
+    android:layout_gravity="center"
+    android:background="@color/dirty_white"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:padding="@dimen/activity_horizontal_margin">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_boards_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_no_boards_available"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_boards_available_please_create_a_board"
+        android:textColor="@color/text_color"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

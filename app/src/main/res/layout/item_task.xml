@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardBackgroundColor="#00000000"
+    android:orientation="horizontal"
+    android:layout_margin="50dp"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="@dimen/card_corner_radius">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+<!--    add new task    /-->
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_card_add_task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardCornerRadius="@dimen/card_corner_radius">
+            <LinearLayout
+                android:id="@+id/ll_add_task"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_add_task"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/card_adapter_inner_padding"
+                        android:src="@drawable/ic_baseline_add_24" />
+
+                    <TextView
+                        android:id="@+id/tv_add_task"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add Task"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/heading_4" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+<!--        add name to new task -->
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_add_task_list_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:layout_constraintTop_toBottomOf="@id/cv_card_add_task"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <ImageButton
+                    android:id="@+id/ib_close_list_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="@dimen/card_adapter_inner_padding"
+                    android:src="@drawable/ic_baseline_cancel_24" />
+
+                <EditText
+                    android:id="@+id/et_list_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/paragraph_2"
+                    android:autofillHints="Enter task name"
+                    android:hint="Enter task name"
+                    android:inputType="text" />
+
+
+                <ImageButton
+                    android:id="@+id/ib_finish_list_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/card_adapter_inner_padding"
+                    android:background="?attr/selectableItemBackground"
+                    android:src="@drawable/ic_baseline_check_circle_24" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_task_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/cv_add_task_list_name">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_card_task_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/paragraph_2"
+                        android:inputType="text"
+                        android:focusable="false"
+                        android:text="@string/title" />
+
+                    <ImageButton
+                        android:id="@+id/ib_edit_list_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="@dimen/card_adapter_inner_padding"
+                        android:src="@drawable/ic_baseline_edit_24" />
+
+                    <ImageButton
+                        android:id="@+id/ib_delete_list_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="@dimen/card_adapter_inner_padding"
+                        android:src="@drawable/ic_baseline_delete_24" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_edit_task_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@id/cv_card_task_title">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/ib_close_edit_list_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="@dimen/card_adapter_inner_padding"
+                        android:src="@drawable/ic_baseline_cancel_24" />
+
+                    <EditText
+                        android:id="@+id/et_edit_list_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints="@string/eneter_list_name"
+                        android:hint="Enter new task name"
+                        android:inputType="text" />
+
+                    <ImageButton
+                        android:id="@+id/ib_edit_finish_list_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="@dimen/card_adapter_inner_padding"
+                        android:src="@drawable/ic_baseline_check_circle_24" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_card_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:paddingBottom="@dimen/activity_global_vertical_padding"
+                app:layout_constraintTop_toBottomOf="@id/cv_edit_task_name" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_card_title_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:elevation="10dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@id/rv_card_list">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/ib_close_card_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="@dimen/card_adapter_inner_padding"
+                        android:src="@drawable/ic_baseline_cancel_24" />
+
+                    <EditText
+                        android:id="@+id/et_card_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Enter card name"
+                        android:inputType="text" />
+
+                    <ImageButton
+                        android:id="@+id/ib_finish_card_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="@dimen/card_adapter_inner_padding"
+                        android:src="@drawable/ic_baseline_check_circle_24" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/cv_card_title_name"
+                app:cardCornerRadius="@dimen/card_corner_radius">
+
+                <LinearLayout
+                    android:id="@+id/ll_add_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/cv_card_title_name"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_add_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/card_adapter_inner_padding"
+                        android:src="@drawable/ic_baseline_add_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_card"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/heading_4" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

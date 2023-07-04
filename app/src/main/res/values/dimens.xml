@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Dimensions for layout-->
+    <dimen name="activity_global_horizontal_margin">15dp</dimen>
+    <dimen name="activity_global_vertical_margin">15dp</dimen>
+    <dimen name="activity_global_horizontal_padding">15dp</dimen>
+    <dimen name="activity_global_vertical_padding">15dp</dimen>
+    <dimen name="vertical_dividing_margin">30dp</dimen>
+
+    <dimen name="dialog_width_and_height">60dp</dimen>
+    <dimen name="profile_image_size">75dp</dimen>
+
+    <dimen name="header_height">200dp</dimen>
+    <!--Dimensions for font size-->
+    <!-- Title font sizes   -->
+    <dimen name="heading_1">36sp</dimen>
+    <dimen name="heading_2">32sp</dimen>
+    <dimen name="heading_3">28sp</dimen>
+    <dimen name="heading_4">24sp</dimen>
+    <!-- Paragraph font sizes   -->
+    <dimen name="paragraph_1">20sp</dimen>
+    <dimen name="paragraph_2">18sp</dimen>
+    <dimen name="paragraph_3">12sp</dimen>
+    <dimen name="paragraph_4">8sp</dimen>
+    <!--Styles of components-->
+    <dimen name="button_corner_radius">10dp</dimen>
+    <dimen name="card_corner_radius">10dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="profile_size_profile_activity">100dp</dimen>
+    <dimen name="card_inner_padding">25dp</dimen>
+    <dimen name="card_adapter_inner_padding">10dp</dimen>
+    <dimen name="divider">2dp</dimen>
+    <dimen name="activity_vertical_margin_small">10dp</dimen>
+    <dimen name="activity_vertical_margin_extra_small">5dp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">0dp</dimen>
+
+
+</resources>

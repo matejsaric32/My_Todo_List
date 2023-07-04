@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ProfileActivity"
+    android:background="@color/dirty_white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_profile_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/Theme.MyTodoList.AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_profile_activity"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/primary_accent"
+            app:popupTheme="@style/Theme.MyTodoList.PopupOverlay"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/siv_place_image_profile"
+        android:layout_width="@dimen/profile_size_profile_activity"
+        android:layout_height="100dp"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_profile_activity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/vertical_dividing_margin"
+        app:srcCompat="@drawable/ic_baseline_account_circle_24"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_profile_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/siv_place_image_profile"
+        android:layout_marginTop="@dimen/vertical_dividing_margin"
+        android:layout_marginStart="@dimen/activity_global_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_global_horizontal_margin"
+        android:padding="@dimen/activity_global_horizontal_padding"
+        android:orientation="vertical"
+        android:background="@drawable/card_white_border_radius">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ti_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextColor="@color/text_color"
+            app:layout_constraintTop_toTopOf="parent">
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:inputType="text"
+                android:textSize="@dimen/paragraph_1"
+                android:background="@color/white"
+                android:text=""/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ti_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_dividing_margin"
+            app:hintTextColor="@color/text_color"
+            app:layout_constraintTop_toBottomOf="@+id/ti_name">
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:inputType="textEmailAddress"
+                android:textSize="@dimen/paragraph_1"
+                android:background="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ti_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_dividing_margin"
+            app:hintTextColor="@color/text_color"
+            app:layout_constraintTop_toBottomOf="@+id/ti_email">
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/phone"
+                android:inputType="phone"
+                android:textSize="@dimen/paragraph_1"
+                android:background="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_global_horizontal_margin"
+        app:layout_constraintTop_toBottomOf="@+id/ll_profile_form"
+        android:background="@drawable/button_gradinet_rounded"
+        android:text="@string/update_profile"
+        android:textSize="@dimen/paragraph_1"
+        android:textColor="@color/white"
+        android:fontFamily="@font/tiltneonregular" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

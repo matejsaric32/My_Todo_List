@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginHorizontal="@dimen/activity_global_vertical_margin"
+    android:layout_marginTop="@dimen/activity_global_vertical_margin"
+    android:background="?attr/selectableItemBackground"
+    android:elevation="5dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/view_label_color"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:visibility="visible"
+            tools:background="@color/primary_accent" />
+
+        <TextView
+            android:id="@+id/tv_card_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/card_adapter_inner_padding"
+            android:paddingEnd="@dimen/card_adapter_inner_padding"
+            android:paddingTop="@dimen/card_adapter_inner_padding"
+            android:paddingBottom="@dimen/card_adapter_inner_padding"
+            android:textSize="@dimen/paragraph_1"
+            tools:text="Card Name" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_task_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp">
+            <ImageView
+                android:id="@+id/iv_task_list_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/card_adapter_inner_padding"
+                android:src="@drawable/ic_baseline_check_box_24"/>
+            <TextView
+                android:id="@+id/tv_task_list_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_task_list_check"
+                tools:text="1/2"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

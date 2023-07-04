@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dirty_white"
+    tools:context=".activities.MembersActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_members_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/Theme.MyTodoList.AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_members_activity"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/primary_accent"
+            app:popupTheme="@style/Theme.MyTodoList.PopupOverlay"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_members_activity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_members_activity"
+        android:layout_margin="@dimen/activity_horizontal_margin">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/dirty_white"
+            app:layout_constraintTop_toBottomOf="parent"
+            android:layout_marginTop="?android:attr/actionBarSize"
+            android:elevation="20dp"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            android:visibility="visible"
+            app:cardBackgroundColor="@color/white">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_members_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

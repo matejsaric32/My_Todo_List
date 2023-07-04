@@ -1,0 +1,5 @@
+Problemi:
+1. Texture view je malo strachan te je netocno prikazuje sliku koja ce se pokazati
+2. Brinjame slika za storage kada se budu promjenile
+3. Animacije
+5.-

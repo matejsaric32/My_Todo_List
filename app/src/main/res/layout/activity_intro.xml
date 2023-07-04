@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.IntroActivity"
+    android:padding="@dimen/activity_global_horizontal_padding">
+
+    <ImageView
+        android:id="@+id/iv_logo_intro"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="@dimen/activity_global_vertical_margin"
+        android:src="@drawable/logo"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_intro_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/iv_logo_intro"
+        android:gravity="center"
+        android:layout_margin="@dimen/activity_global_vertical_margin"
+        android:text="@string/let_s_get_started"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/heading_2"
+        android:fontFamily="@font/tiltneonregular"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tv_intro_paragraph_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_intro_heading"
+        android:gravity="center"
+        android:layout_margin="@dimen/activity_global_vertical_margin"
+        android:text="@string/intro_description_text"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/paragraph_2"
+        android:fontFamily="@font/tiltneonregular" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vertical_dividing_margin"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/tv_intro_paragraph_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/button_gradinet_rounded"
+        android:text="@string/sign_in"
+        android:textColor="@color/white"
+        android:textSize="@dimen/heading_4"
+        android:fontFamily="@font/tiltneonregular"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sign_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_global_vertical_margin"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/btn_sign_in"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/button_outlined_rounded"
+        android:text="@string/sign_up"
+        android:textColor="@color/secondary_accent"
+        android:textSize="@dimen/heading_4"
+        android:fontFamily="@font/tiltneonregular"
+        />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
